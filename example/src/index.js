@@ -2,44 +2,11 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {render} from 'react-dom'
 import WidgetGrid from '../../src/components/WidgetGrid'
+import '../../node_modules/react-grid-layout/css/styles.css'
+import '../../node_modules/react-resizable/css/styles.css'
 
 let lsGrid = getFromLS('grid') || {}
 lsGrid = JSON.parse(JSON.stringify(lsGrid))
-
-function getFromLS (key) {
-  let ls = {}
-  if (global.localStorage) {
-    try {
-      ls = JSON.parse(global.localStorage.getItem('widget-grid')) || {}
-    } catch (e) {/* Ignore*/}
-  }
-  return ls[key]
-}
-
-function saveToLS (key, value) {
-  if (global.localStorage) {
-    global.localStorage.setItem('widget-grid', JSON.stringify({[key]: value}))
-  }
-}
-
-function Foo () {
-  return <div>Foo</div>
-}
-
-function Bar ({text, updateWidget}) {
-  return (
-    <div>
-      Bar
-      <div className="row">
-        <div className="col-xs-10 col-xs-offset-1">
-          <input className="form-control" value={text || ''} onChange={e => updateWidget({text: e.target.value})}/>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-Bar.propTypes = {text: PropTypes.string, updateWidget: PropTypes.func}
 
 class Example extends Component {
   constructor (props) {
@@ -100,21 +67,54 @@ class Example extends Component {
           <div className="col-xs-9">
             <WidgetGrid
               ref={grid => this.grid = grid}
-              locked={this.state.locked}
               layouts={lsGrid.layouts}
               widgets={lsGrid.widgets}
-              components={{
-                Foo: Foo,
-                Bar: Bar
-              }}
+              components={{Foo, Bar}}
               onChange={(layouts, widgets) => {
                 saveToLS('grid', {layouts, widgets})
               }}
+              global={{loginId: 'foobar', locked: this.state.locked}}
+              isDraggable={!this.state.locked}
+              isResizable={!this.state.locked}
             />
           </div>
         </div>
       </div>
     )
+  }
+}
+
+function Foo ({global}) {
+  return <div>Foo - {global.loginId}</div>
+}
+Foo.propTypes = {global: PropTypes.object}
+
+function Bar ({widget, updateWidget}) {
+  return (
+    <div>
+      <div className="row">
+        <div className="col-xs-10 col-xs-offset-1">
+          <input className="form-control" value={widget.text || ''} onChange={e => updateWidget({text: e.target.value})}/>
+        </div>
+      </div>
+    </div>
+  )
+}
+Bar.propTypes = {widget: PropTypes.object, updateWidget: PropTypes.func}
+
+function getFromLS (key) {
+  let ls = {}
+  if (global.localStorage) {
+    try {
+      ls = JSON.parse(global.localStorage.getItem('widget-grid')) || {}
+    } catch (e) {/* Ignore*/}
+  }
+  return ls[key]
+}
+
+function saveToLS (key, value) {
+  if (global.localStorage) {
+    global.localStorage.setItem('widget-grid', JSON.stringify({[key]: value}))
   }
 }
 

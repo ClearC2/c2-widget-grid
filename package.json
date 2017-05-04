@@ -1,6 +1,6 @@
 {
   "name": "c2-widget-grid",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a reactjs widget grid component",
   "repository": {
     "type": "git",
@@ -24,11 +24,14 @@
     "babel-preset-env": "^1.4.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
+    "css-loader": "^0.28.1",
     "eslint": "^3.12.1",
     "eslint-plugin-react": "^6.8.0",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "prop-types": "^15.0.0",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
-    "prop-types": "^15.0.0",
+    "style-loader": "^0.17.0",
     "webpack": "^2.5.0",
     "webpack-dev-server": "^2.4.5"
   },

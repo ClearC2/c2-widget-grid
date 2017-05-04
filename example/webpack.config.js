@@ -17,10 +17,10 @@ module.exports = {
         include: [path.join(__dirname, 'src'), path.join(__dirname, '../src')],
       },
       {
-          test: /\.css$/,
-          loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' })
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' })
       }
-    ],
+    ]
   },
   plugins: [new ExtractTextPlugin('styles.css')]
 }

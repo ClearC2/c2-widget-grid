@@ -21,9 +21,9 @@ export default class WidgetGrid extends Component {
     onChange: PropTypes.func,
     layouts: PropTypes.object,
     widgets: PropTypes.object,
-    getGrid: PropTypes.func,
     locked: PropTypes.bool,
-    widgetContainer: PropTypes.func
+    widgetContainer: PropTypes.func,
+    global: PropTypes.object
   }
 
   static defaultProps = {
@@ -31,7 +31,8 @@ export default class WidgetGrid extends Component {
     breakpoints: {xl: 1800, lg: 1400, md: 1200, sm: 768, xs: 480, xxs: 0},
     cols: {xl: 10, lg: 8, md: 5, sm: 4, xs: 2, xxs: 1},
     rowHeight: 100,
-    onLayoutChange: () => {}
+    onLayoutChange: () => {},
+    global: {}
   }
 
   constructor (props) {
@@ -46,14 +47,12 @@ export default class WidgetGrid extends Component {
       mounted: false,
       layouts,
       items: items || [],
-      widgets: props.widgets || {},
-      gridInitialized: false
+      widgets: props.widgets || {}
     }
   }
 
   componentDidMount () {
     this.setState({mounted: true})
-    if (this.props.getGrid) this.props.getGrid(this)
   }
 
   onLayoutChange = (layout, layouts) => {
@@ -110,28 +109,25 @@ export default class WidgetGrid extends Component {
     const items = (this.state.items || []).filter(item => !!this.state.widgets[item.i])
     return (
       <ReactGridLayout
-          ref="grid"
           {...this.props}
           layouts={this.state.layouts}
           onLayoutChange={this.onLayoutChange}
-          measureBeforeMount={true}
-          isDraggable={!this.props.locked}
-          isResizable={!this.props.locked}>
+          measureBeforeMount={false}
+          useCSSTransforms={this.state.mounted}>
           {items.map(item => {
             const widget = this.state.widgets[item.i]
             const {componentKey, ...widgetProps} = widget
             const Component = this.props.components[componentKey]
             const wProps = {
-              ...widgetProps,
-              locked: this.props.locked,
-              size: {w: item.w, h: item.h}
+              widget: widgetProps,
+              item,
+              global: this.props.global
             }
 
             const container = this.props.widgetContainer || defaultWidgetContainer
 
             return container({
-              item,
-              locked: this.props.locked,
+              ...wProps,
               remove: () => this.remove(item.i),
               children: Component ? <Component {...wProps} updateWidget={props => this.updateWidget(item.i, props)}/> : item.i
             })
@@ -141,10 +137,10 @@ export default class WidgetGrid extends Component {
   }
 }
 
-function defaultWidgetContainer ({item, locked, children, remove}) {
+function defaultWidgetContainer ({item, global, children, remove}) {
   return (
-    <div key={item.i} data-grid={item} style={{border: '1px solid black'}} className="widget-container">
-      {locked ? null : (
+    <div key={item.i} data-grid={item} style={{border: '1px solid black'}}>
+      {global.locked ? null : (
         <div style={{clear: 'both', textAlign: 'right'}}>
           <a onClick={remove} className="pointer">&times; &nbsp;</a>
         </div>
@@ -156,7 +152,7 @@ function defaultWidgetContainer ({item, locked, children, remove}) {
 
 defaultWidgetContainer.propTypes = {
   item: PropTypes.object,
-  locked: PropTypes.bool,
+  global: PropTypes.object,
   children: PropTypes.node,
   remove: PropTypes.func
 }
