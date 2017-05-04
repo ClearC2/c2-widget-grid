@@ -27,7 +27,7 @@ import WidgetGrid from 'c2-widget-grid'
 // inside the render of a component
 class Dashboard extends Component {
   addWidget = () => {
-    this.grid.addWidget({x: 2, h: 2}, {componentKey: 'Foo'})
+    this.grid.addWidget({w: 2, h: 2}, {componentKey: 'Foo'})
   }
 
   render () {
