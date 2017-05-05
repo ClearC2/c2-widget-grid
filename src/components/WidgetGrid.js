@@ -60,7 +60,7 @@ export default class WidgetGrid extends Component {
     this.props.onChange(layouts, this.state.widgets)
   }
 
-  addWidget = (gridItem, widget) => {
+  addWidget = (gridItem, componentKey, widget = {}) => {
     const {x, y, w = 1, h = 2, i = generateUUID()} = gridItem
     this.setState({
       items: this.state.items.concat({
@@ -73,7 +73,10 @@ export default class WidgetGrid extends Component {
       }),
       widgets: {
         ...this.state.widgets,
-        [i]: widget
+        [i]: {
+          ...widget,
+          componentKey
+        }
       }
     })
   }

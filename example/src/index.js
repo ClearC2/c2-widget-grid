@@ -25,7 +25,7 @@ class Example extends Component {
                 w: this.state.width || 1,
                 h: this.state.height || 1
               }
-              this.grid.addWidget(gridItem, {componentKey: this.state.widget || 'Foo'})
+              this.grid.addWidget(gridItem, (this.state.widget || 'Foo'), {text: 'some text'})
             }}>
               <div className="form-group">
                 <label>Widget</label>
