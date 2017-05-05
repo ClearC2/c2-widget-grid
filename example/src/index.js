@@ -73,7 +73,7 @@ class Example extends Component {
               onChange={(layouts, widgets) => {
                 saveToLS('grid', {layouts, widgets})
               }}
-              global={{loginId: 'foobar', locked: this.state.locked}}
+              common={{loginId: 'foobar', locked: this.state.locked}}
               isDraggable={!this.state.locked}
               isResizable={!this.state.locked}
             />
@@ -84,10 +84,10 @@ class Example extends Component {
   }
 }
 
-function Foo ({global}) {
-  return <div>Foo - {global.loginId}</div>
+function Foo ({common}) {
+  return <div>Foo - {common.loginId}</div>
 }
-Foo.propTypes = {global: PropTypes.object}
+Foo.propTypes = {common: PropTypes.object}
 
 function Bar ({widget, updateWidget}) {
   return (

@@ -23,7 +23,7 @@ export default class WidgetGrid extends Component {
     widgets: PropTypes.object,
     locked: PropTypes.bool,
     widgetContainer: PropTypes.func,
-    global: PropTypes.object
+    common: PropTypes.object
   }
 
   static defaultProps = {
@@ -32,7 +32,7 @@ export default class WidgetGrid extends Component {
     cols: {xl: 10, lg: 8, md: 5, sm: 4, xs: 2, xxs: 1},
     rowHeight: 100,
     onLayoutChange: () => {},
-    global: {}
+    common: {}
   }
 
   constructor (props) {
@@ -121,7 +121,7 @@ export default class WidgetGrid extends Component {
             const wProps = {
               widget: widgetProps,
               item,
-              global: this.props.global
+              common: this.props.common
             }
 
             const container = this.props.widgetContainer || defaultWidgetContainer
@@ -137,10 +137,10 @@ export default class WidgetGrid extends Component {
   }
 }
 
-function defaultWidgetContainer ({item, global, children, remove}) {
+function defaultWidgetContainer ({item, common, children, remove}) {
   return (
     <div key={item.i} data-grid={item} style={{border: '1px solid black'}}>
-      {global.locked ? null : (
+      {common.locked ? null : (
         <div style={{clear: 'both', textAlign: 'right'}}>
           <a onClick={remove} className="pointer">&times; &nbsp;</a>
         </div>
@@ -152,7 +152,7 @@ function defaultWidgetContainer ({item, global, children, remove}) {
 
 defaultWidgetContainer.propTypes = {
   item: PropTypes.object,
-  global: PropTypes.object,
+  common: PropTypes.object,
   children: PropTypes.node,
   remove: PropTypes.func
 }

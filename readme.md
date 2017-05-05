@@ -37,7 +37,7 @@ class Dashboard extends Component {
         widgets={widgets} // retrieved from localStorage/redux
         components={{Foo, Bar}}
         onChange={(layouts, widgets) => save({layouts, widgets})} // save to localStorage/redux
-        global={{
+        common={{
           loginId: 'foobar'
           locked: this.state.locked
         }}
@@ -59,20 +59,20 @@ argument is configuration for the widget. At the very least, it needs a `compone
 on the WidgetGrid. `Foo` and `Bar` are component classes in the example above. Other arbitrary key/values can be passed into this as well.
 
 ### Widget components
-A widget component will be passed 4 props: `item`, `widget`, `global`, and `updateWidget`.
+A widget component will be passed 4 props: `item`, `widget`, `common`, and `updateWidget`.
  - `item` - this is the react-grid-layout item object. It contains things like w, h, x, y, etc.
  - `widget` - this is an object containing all abritrary props you passed into the second argument of `addWidget()` minus the `componentKey`.
- - `global` - `WidgetGrid` accepts a `global` prop. This object will be passed along to all widget components.
+ - `common` - `WidgetGrid` accepts a `common` prop. This object will be passed along to all widget components.
  - `updateWidget` - this is a function that allows you to update the arbitrary `widget` prop. It works very similarly to `setState`. It exists to trigger the `onChange` function so new values can be persisted.
 
 ### Removing widgets
 By default, the following renderer is used to render the container for all widgets. This can be set via the `widgetContainer` prop on the grid. For technical reasons, this must be a function that returns jsx.
 
 ```js
-function defaultWidgetContainer ({item, global, children, remove}) {
+function defaultWidgetContainer ({item, common, children, remove}) {
   return (
     <div key={item.i} data-grid={item} style={{border: '1px solid black'}}>
-      {global.locked ? null : (
+      {common.locked ? null : (
         <div style={{clear: 'both', textAlign: 'right'}}>
           <a onClick={remove} className="pointer">&times; &nbsp;</a>
         </div>
