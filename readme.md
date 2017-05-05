@@ -55,7 +55,7 @@ prop function will be called when either the `layouts` or the `widgets` change.
 ### Adding widgets
 After the grid/widgets are built from the initial `layouts` and `widgets` props, they can be added via the grid's `addWidget` method.
 The first argument is the props for the grid item([see grid item props](https://github.com/STRML/react-grid-layout/blob/master/README.md#grid-item-props)). The second
-argument is the component key. This must match a key found in the `components` that were assigned to the `WidgetGrid`. configuration for the widget. `ContactList` and `PerformanceChart` are component classes in the example above. The last argument is an object of props that are specific to this widget. This will be passed to the component as the `widget` prop.
+argument is the component key. This must match a key found in the `components` that were assigned to the `WidgetGrid`. `ContactList` and `PerformanceChart` are component classes in the example above. The last argument is an object of props that are specific to this widget. This will be passed to the component as the `widget` prop.
 
 ### Widget components
 A widget component will be passed 4 props: `item`, `widget`, `common`, and `updateWidget`.

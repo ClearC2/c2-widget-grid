@@ -57,7 +57,7 @@ export default class WidgetGrid extends Component {
 
   onLayoutChange = (layout, layouts) => {
     this.setState({layouts})
-    this.props.onChange(layouts, this.state.widgets)
+    this.onChange(layouts, this.state.widgets)
   }
 
   addWidget = (gridItem, componentKey, widget = {}) => {
@@ -105,7 +105,13 @@ export default class WidgetGrid extends Component {
       }
     }
     this.setState({widgets})
-    this.props.onChange(this.state.layouts, widgets)
+    this.onChange(this.state.layouts, widgets)
+  }
+
+  onChange = (layouts, widgets) => {
+    if (this.props.onChange) {
+      this.props.onChange(layouts, widgets)
+    }
   }
 
   render () {
