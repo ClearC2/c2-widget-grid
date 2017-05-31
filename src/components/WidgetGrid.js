@@ -55,30 +55,40 @@ export default class WidgetGrid extends Component {
     this.setState({mounted: true})
   }
 
+  onBreakpointChange = (breakpoint, cols) => {
+    this.setState({cols: cols})
+  }
+
   onLayoutChange = (layout, layouts) => {
     this.setState({layouts})
     this.onChange(layouts, this.state.widgets)
   }
 
   addWidget = (gridItem, componentKey, widget = {}) => {
-    const {x, y, w = 1, h = 2, i = generateUUID()} = gridItem
-    this.setState({
-      items: this.state.items.concat({
-        ...gridItem,
+    this.addWidgets([{gridItem, componentKey, widget}])
+  }
+
+  addWidgets = (widgetConfigs = []) => {
+    let {items, widgets, cols = 12} = this.state
+    widgetConfigs.forEach(obj => {
+      const {x, y, w = 1, h = 2, i = generateUUID()} = obj.gridItem
+      items = items.concat({
+        ...obj.gridItem,
         i,
-        x: x || this.state.items.length * h % (this.state.cols || 12),
+        x: x || items.length * 2 % cols,
         y: y || Infinity,
         w,
         h
-      }),
-      widgets: {
-        ...this.state.widgets,
+      })
+      widgets = {
+        ...widgets,
         [i]: {
-          ...widget,
-          componentKey
+          ...(obj.widget || {}),
+          componentKey: obj.componentKey
         }
       }
     })
+    this.setState({items, widgets})
   }
 
   remove = i => {
@@ -121,6 +131,7 @@ export default class WidgetGrid extends Component {
           {...this.props}
           layouts={this.state.layouts}
           onLayoutChange={this.onLayoutChange}
+          onBreakpointChange={this.onBreakpointChange}
           measureBeforeMount={false}
           useCSSTransforms={this.state.mounted}>
           {items.map(item => {
