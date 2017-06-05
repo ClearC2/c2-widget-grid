@@ -23,7 +23,8 @@ export default class WidgetGrid extends Component {
     widgets: PropTypes.object,
     locked: PropTypes.bool,
     widgetContainer: PropTypes.func,
-    common: PropTypes.object
+    common: PropTypes.object,
+    measureBeforeMount: PropTypes.bool
   }
 
   static defaultProps = {
@@ -32,7 +33,8 @@ export default class WidgetGrid extends Component {
     cols: {xl: 10, lg: 8, md: 5, sm: 4, xs: 2, xxs: 1},
     rowHeight: 100,
     onLayoutChange: () => {},
-    common: {}
+    common: {},
+    measureBeforeMount: false
   }
 
   constructor (props) {
@@ -132,14 +134,16 @@ export default class WidgetGrid extends Component {
           layouts={this.state.layouts}
           onLayoutChange={this.onLayoutChange}
           onBreakpointChange={this.onBreakpointChange}
-          measureBeforeMount={false}
+          measureBeforeMount={this.props.measureBeforeMount}
           useCSSTransforms={this.state.mounted}>
           {items.map(item => {
             const widget = this.state.widgets[item.i]
             const {componentKey, ...widgetProps} = widget
             const Component = this.props.components[componentKey]
             const wProps = {
-              widget: widgetProps,
+              ...widgetProps,
+              ...widgetProps.persist,
+              // widget: widgetProps.persist, // QUESTION: do we need this?
               item,
               common: this.props.common
             }

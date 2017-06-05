@@ -25,7 +25,7 @@ class Example extends Component {
                 w: this.state.width || 1,
                 h: this.state.height || 1
               }
-              this.grid.addWidget(gridItem, (this.state.widget || 'Foo'), {text: 'some text'})
+              this.grid.addWidget(gridItem, (this.state.widget || 'Foo'), {persist: {text: 'some text'}, name: 'Nick'})
             }}>
               <div className="form-group">
                 <label>Widget</label>
@@ -89,18 +89,24 @@ function Foo ({common}) {
 }
 Foo.propTypes = {common: PropTypes.object}
 
-function Bar ({widget, updateWidget}) {
+function Bar ({text, name, updateWidget}) {
   return (
     <div>
       <div className="row">
         <div className="col-xs-10 col-xs-offset-1">
-          <input className="form-control" value={widget.text || ''} onChange={e => updateWidget({text: e.target.value})}/>
+          <input className="form-control" value={text || ''} onChange={e => updateWidget({text: e.target.value})}/>
         </div>
+        <div className="col-xs-12">Hi, {name}!</div>
       </div>
     </div>
   )
 }
-Bar.propTypes = {widget: PropTypes.object, updateWidget: PropTypes.func}
+Bar.propTypes = {
+  widget: PropTypes.object,
+  text: PropTypes.string,
+  name: PropTypes.string,
+  updateWidget: PropTypes.func
+}
 
 function getFromLS (key) {
   let ls = {}
