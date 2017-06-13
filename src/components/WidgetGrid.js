@@ -124,8 +124,16 @@ export default class WidgetGrid extends Component {
     }
   }
 
+  getValidItems () {
+    return (this.state.items || [])
+      .filter(item => !!this.state.widgets[item.i])
+      .filter(item => {
+        const widget = this.state.widgets[item.i]
+        return !!this.props.components[widget.componentKey]
+      })
+  }
+
   render () {
-    const items = (this.state.items || []).filter(item => !!this.state.widgets[item.i])
     return (
       <ReactGridLayout
           {...this.props}
@@ -134,7 +142,7 @@ export default class WidgetGrid extends Component {
           onBreakpointChange={this.onBreakpointChange}
           measureBeforeMount={false}
           useCSSTransforms={this.state.mounted}>
-          {items.map(item => {
+          {this.getValidItems().map(item => {
             const widget = this.state.widgets[item.i]
             const {componentKey, ...widgetProps} = widget
             const Component = this.props.components[componentKey]
