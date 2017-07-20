@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {WidthProvider, Responsive as ResponsiveGrid} from 'react-grid-layout'
+import {WidthProvider, Responsive as ResponsiveGrid, utils} from 'react-grid-layout'
 const ReactGridLayout = WidthProvider(ResponsiveGrid)
 
 function generateUUID () {
@@ -56,7 +56,7 @@ export default class WidgetGrid extends Component {
   }
 
   onBreakpointChange = (breakpoint, cols) => {
-    this.setState({cols: cols})
+    this.setState({breakpoint, cols})
   }
 
   onLayoutChange = (layout, layouts) => {
@@ -68,15 +68,41 @@ export default class WidgetGrid extends Component {
     this.addWidgets([{gridItem, componentKey, widget}])
   }
 
+  getNextPosition ({w, h}) {
+    const items = this.state.layouts[this.state.breakpoint] || []
+    let x = -1, y = 0, position
+    const {cols} = this.state
+    while (!position) {
+      ++x
+      if ((x + w) > cols) {
+        x = 0
+        ++y
+      }
+      const subject = {x, y, w, h}
+      let collides = false
+      items.forEach(item => {
+        if (utils.collides(subject, item)) {
+          collides = true
+        }
+      })
+      if (!collides) {
+        position = subject
+      }
+    }
+    return position
+  }
+
   addWidgets = (widgetConfigs = []) => {
-    let {items, widgets, cols = 12} = this.state
+    let {items, widgets} = this.state
     widgetConfigs.forEach(obj => {
-      const {x, y, w = 1, h = 2, i = generateUUID()} = obj.gridItem
+      const {w = 1, h = 2, i = generateUUID()} = obj.gridItem
+      const validPosition = this.getNextPosition({w, h})
+
       items = items.concat({
         ...obj.gridItem,
         i,
-        x: x || items.length * 2 % cols,
-        y: y || Infinity,
+        x: validPosition.x,
+        y: validPosition.y,
         w,
         h
       })
