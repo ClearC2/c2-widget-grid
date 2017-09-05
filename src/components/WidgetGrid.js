@@ -15,7 +15,7 @@ function generateUUID () {
   })
 }
 
-export default class WidgetGrid extends Component {
+export class _WidgetGrid extends Component {
   static propTypes = {
     components: PropTypes.object,
     onChange: PropTypes.func,
@@ -23,7 +23,9 @@ export default class WidgetGrid extends Component {
     widgets: PropTypes.object,
     locked: PropTypes.bool,
     widgetContainer: PropTypes.func,
-    common: PropTypes.object
+    common: PropTypes.object,
+    breakpoints: PropTypes.object,
+    width: PropTypes.number
   }
 
   static defaultProps = {
@@ -38,10 +40,14 @@ export default class WidgetGrid extends Component {
   constructor (props) {
     super(props)
     const layouts = props.layouts || {}
-    let items = []
-    Object.keys(layouts).forEach(size => {
-      if (layouts[size].length) items = layouts[size]
-    })
+    const breakpoint = ResponsiveGrid.utils.getBreakpointFromWidth(props.breakpoints, props.width)
+    let items = layouts[breakpoint] || []
+    if (!items.length) {
+      const sortedBreakpoints = ResponsiveGrid.utils.sortBreakpoints(props.breakpoints).reverse()
+      sortedBreakpoints.forEach(size => {
+        if (layouts[size] && !items.length) items = layouts[size]
+      })
+    }
 
     this.state = {
       mounted: false,
@@ -190,6 +196,8 @@ export default class WidgetGrid extends Component {
     )
   }
 }
+
+export default WidthProvider(_WidgetGrid)
 
 function defaultWidgetContainer ({item, common, children, remove}) {
   return (
