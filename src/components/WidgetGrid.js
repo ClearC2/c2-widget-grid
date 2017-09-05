@@ -15,7 +15,7 @@ function generateUUID () {
   })
 }
 
-export class _WidgetGrid extends Component {
+export default class WidgetGrid extends Component {
   static propTypes = {
     components: PropTypes.object,
     onChange: PropTypes.func,
@@ -196,8 +196,6 @@ export class _WidgetGrid extends Component {
     )
   }
 }
-
-export default WidthProvider(_WidgetGrid)
 
 function defaultWidgetContainer ({item, common, children, remove}) {
   return (
